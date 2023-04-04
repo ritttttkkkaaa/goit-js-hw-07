@@ -23,6 +23,11 @@ function createGalleryItemsMarkup(items) {
     })
     .join('');
 }
+
+function onImgClick(e) {
+  e.preventDefault();
+  if (e.target.nodeName !== "IMG") return;
+}
 console.log(galleryItems);
 
 
