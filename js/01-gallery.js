@@ -1,32 +1,54 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-const galleryContainer = document.querySelector('.gallery');
-const itemsMarkup = createGalleryItemsMarkup(galleryItems);
-galleryContainer.insertAdjacentHTML('beforeend', itemsMarkup);
-galleryContainer.addEventListener('click', onImgClick);
+const galleryList = document.querySelector(".gallery");
 
-// rendered items
-function createGalleryItemsMarkup(items) {
-  return items
-    .map(({ preview, original, description }) => {
-      return `<div class="gallery__item">
-  <a class="gallery__link" href="${original}">
-    <img
-      class="gallery__image"
-      src="${preview}"
-      data-source="${original}"
-      alt="${description}"
-    />
-  </a>
-</div>`;
-    })
-    .join('');
+function createGallery(items) {
+  return items.reduce((acc, { preview, original, description }) => {
+    return (
+      acc +
+      `<li class="gallery__item">
+        <a class="gallery__link" href="${original}">
+          <img
+            class="gallery__image"
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"
+          />
+        </a>
+      </li>`
+    );
+  }, "");
 }
 
-function onImgClick(e) {
-  e.preventDefault();
-  if (e.target.nodeName !== "IMG") return;
+const galleryMarkup = createGallery(galleryItems);
+galleryList.insertAdjacentHTML("beforeend", galleryMarkup);
+galleryList.addEventListener("click", onGalleryItemClick);
+function onGalleryItemClick(event) {
+ 
+  event.preventDefault();
+  
+  const imgSrc = event.target.dataset.source;
+  
+  if (imgSrc) {
+    instance.element().querySelector("img").src = imgSrc;
+    instance.show();
+  }
+}
+const instance = basicLightbox.create(`<img>`, {
+  onShow: () => {
+    window.addEventListener("keydown", сlosingWindowByEscape);
+  },
+  onClose: () => {
+    window.removeEventListener("keydown", сlosingWindowByEscape);
+  },
+});
+
+function сlosingWindowByEscape(event) {
+  if (event.code === "Escape") {
+    instance.close();
+  }
+  return;
 }
 console.log(galleryItems);
 
